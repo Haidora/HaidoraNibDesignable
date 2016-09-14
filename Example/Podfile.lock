@@ -1,0 +1,14 @@
+PODS:
+  - HaidoraNibDesignable (0.1.0)
+
+DEPENDENCIES:
+  - HaidoraNibDesignable (from `../`)
+
+EXTERNAL SOURCES:
+  HaidoraNibDesignable:
+    :path: ../
+
+SPEC CHECKSUMS:
+  HaidoraNibDesignable: 784810517a7eae3116602afa4104567f5dc78da6
+
+COCOAPODS: 0.39.0
