@@ -46,7 +46,8 @@ class InputView: HaidoraNibDesignableView {
 ```
 
 ## Requirements
-- Swift
+- xcode8+
+- Swift3.0
 - iOS8+
 
 ## Installation
