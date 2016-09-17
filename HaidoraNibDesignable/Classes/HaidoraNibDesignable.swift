@@ -42,14 +42,14 @@ public protocol HaidoraNibDesignable: class {
 extension HaidoraNibDesignable where Self: UIView {
     
     public func nibName() -> String {
-        return self.dynamicType.description().componentsSeparatedByString(".").last!
+        return type(of: self).description().components(separatedBy: ".").last!
     }
 
     /// 根据nibName加载Nib
     public func loadNib() -> UIView {
-        let bundle = NSBundle(forClass: self.dynamicType)
+        let bundle = Bundle(for: type(of: self))
         let nib = UINib(nibName: self.nibName(), bundle: bundle)
-        return nib.instantiateWithOwner(self, options: nil)[0] as! UIView
+        return nib.instantiate(withOwner: self, options: nil)[0] as! UIView
     }
     
     /// 添加Nib到当前View
@@ -58,8 +58,8 @@ extension HaidoraNibDesignable where Self: UIView {
         self.addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
         let bindings = ["view": view]
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[view]|", options:[], metrics:nil, views: bindings))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[view]|", options:[], metrics:nil, views: bindings))
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[view]|", options:[], metrics:nil, views: bindings))
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|", options:[], metrics:nil, views: bindings))
     }
 }
 
@@ -68,9 +68,9 @@ extension HaidoraNibDesignable where Self: UIView {
     * 运行时：内部通过awakeAfterUsingCoder替换生成的View
  */
 @IBDesignable
-public class HaidoraNibDesignableView: UIView, HaidoraNibDesignable {
+open class HaidoraNibDesignableView: UIView, HaidoraNibDesignable {
     
-    private var placeholderFlag = false
+    fileprivate var placeholderFlag = false
     
     // MARK: - Initializer
     override public init(frame: CGRect) {
@@ -88,7 +88,7 @@ public class HaidoraNibDesignableView: UIView, HaidoraNibDesignable {
         #endif
     }
     
-    public override func awakeAfterUsingCoder(aDecoder: NSCoder) -> AnyObject? {
+    open override func awakeAfter(using aDecoder: NSCoder) -> Any? {
         let placeHolderView: UIView = self
         #if !TARGET_INTERFACE_BUILDER
         if !placeholderFlag {
@@ -102,10 +102,10 @@ public class HaidoraNibDesignableView: UIView, HaidoraNibDesignable {
         return placeHolderView
     }
     
-    private func copyConstraints(placeholderView: UIView, realView: UIView) {
+    fileprivate func copyConstraints(_ placeholderView: UIView, realView: UIView) {
         // Copy view's basic properties
         realView.frame = placeholderView.frame;
-        realView.hidden = placeholderView.hidden;
+        realView.isHidden = placeholderView.isHidden;
         realView.tag = placeholderView.tag;
         
         // AutoresizingMasks follow placeholder view's
